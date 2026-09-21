@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Úterní kuchařka</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Karla:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>*,*::before,*::after{box-sizing:border-box}img{max-width:100%}[hidden]{display:none!important}</style>
+<style>
+:root{
+  --ground:#F4F4EF;
+  --surface:#FFFFFF;
+  --surface-2:#EDEEE6;
+  --ink:#17201D;
+  --ink-2:#5C6862;
+  --ink-3:#8A948E;
+  --line:#DEDFD6;
+  --line-2:#C9CBBF;
+  --accent:#0E5B54;
+  --accent-soft:#DDEBE7;
+  --warm:#A96A0C;
+  --warm-soft:#F6E9D2;
+  --danger:#9A3A20;
+  --danger-soft:#F6E1DA;
+  --shadow:0 1px 2px rgba(23,32,29,.06), 0 8px 24px -12px rgba(23,32,29,.18);
+  --radius:10px;
+  --serif:"Fraunces",Georgia,"Times New Roman",serif;
+  --sans:"Karla","Helvetica Neue",Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#121614;
+    --surface:#1A201D;
+    --surface-2:#222A26;
+    --ink:#EDEFE9;
+    --ink-2:#9BA69F;
+    --ink-3:#77827C;
+    --line:#2B3430;
+    --line-2:#3B4641;
+    --accent:#5FBCAD;
+    --accent-soft:#16302C;
+    --warm:#DFAB5F;
+    --warm-soft:#2E2618;
+    --danger:#DE8A6E;
+    --danger-soft:#32201A;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#121614;
+  --surface:#1A201D;
+  --surface-2:#222A26;
+  --ink:#EDEFE9;
+  --ink-2:#9BA69F;
+  --ink-3:#77827C;
+  --line:#2B3430;
+  --line-2:#3B4641;
+  --accent:#5FBCAD;
+  --accent-soft:#16302C;
+  --warm:#DFAB5F;
+  --warm-soft:#2E2618;
+  --danger:#DE8A6E;
+  --danger-soft:#32201A;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.shell{max-width:1120px;margin:0 auto;padding:0 20px;padding-block:0 64px}
+h1,h2,h3{margin:0;text-wrap:balance;font-family:var(--serif);font-weight:600;letter-spacing:-.01em}
+p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer;border:none;background:none}
+a{color:var(--accent)}
+:where(button,input,select,textarea,[tabindex]):focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+
+/* ---------- masthead ---------- */
+.masthead{
+  display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+  padding-block:26px 20px;border-bottom:1px solid var(--line);margin-bottom:28px;
+}
+.brand{font-family:var(--serif);font-size:26px;font-weight:700;letter-spacing:-.02em;line-height:1}
+.brand em{font-style:normal;color:var(--accent)}
+.masthead .meta{
+  font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3);margin-left:auto;
+}
+
+/* ---------- eyebrow ---------- */
+.eyebrow{
+  font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);
+}
+
+/* ---------- hero ---------- */
+.hero{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:28px;display:grid;gap:18px;margin-bottom:34px;
+  border-top:3px solid var(--accent);
+}
+.hero-top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:baseline}
+.hero h2{font-size:clamp(26px,4.2vw,38px);line-height:1.12}
+.hero .lede{color:var(--ink-2);max-width:62ch}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---------- chips ---------- */
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;
+  padding:4px 9px;border-radius:999px;border:1px solid var(--line-2);color:var(--ink-2);
+  white-space:nowrap;font-variant-numeric:tabular-nums;
+}
+.chip.on{background:var(--accent-soft);border-color:transparent;color:var(--accent);font-weight:500}
+.chip.warm{background:var(--warm-soft);border-color:transparent;color:var(--warm);font-weight:500}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:7px;
+  font-size:14px;font-weight:500;border:1px solid var(--line-2);background:var(--surface);
+  transition:background .12s ease,border-color .12s ease;
+}
+.btn:hover{border-color:var(--ink-3)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .btn.primary,
+:root:not([data-theme="light"]) .btn.primary{color:#0d1512}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .btn.primary{color:#fff}}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn[disabled]{opacity:.45;cursor:default}
+.btn.ghost{background:none}
+
+/* ---------- section heads ---------- */
+.sec-head{display:flex;align-items:baseline;gap:12px;margin:0 0 14px}
+.sec-head h3{font-size:19px}
+.sec-head .rule{flex:1;height:1px;background:var(--line)}
+
+/* ---------- recipe grid ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.card{
+  text-align:left;width:100%;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius);padding:18px;display:flex;flex-direction:column;gap:10px;
+  transition:border-color .12s ease,transform .12s ease;
+}
+.card:hover{border-color:var(--accent);transform:translateY(-1px)}
+.card h4{margin:0;font-family:var(--serif);font-size:17.5px;font-weight:600;line-height:1.25;text-wrap:balance}
+.card .flag{font-size:20px;line-height:1}
+.card .row{display:flex;align-items:center;gap:8px;justify-content:space-between}
+.card .done{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.card .stars{font-size:12px;color:var(--warm);letter-spacing:2px}
+
+/* ---------- generator ---------- */
+.gen{
+  background:var(--surface-2);border:1px dashed var(--line-2);border-radius:var(--radius);
+  padding:22px;display:grid;gap:14px;margin-top:34px;
+}
+.gen h3{font-size:18px}
+.gen .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.gen select,.gen input{
+  font:inherit;font-size:14px;padding:9px 11px;border-radius:7px;
+  border:1px solid var(--line-2);background:var(--surface);color:var(--ink);
+}
+.gen input{flex:1;min-width:200px}
+.gen .hint{font-size:13px;color:var(--ink-2);max-width:64ch}
+.gen-status{font-family:var(--mono);font-size:12.5px;color:var(--ink-2);min-height:1.4em}
+.gen-status.err{color:var(--danger)}
+
+/* ---------- detail ---------- */
+.detail-bar{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding-block:22px 16px;border-bottom:1px solid var(--line);margin-bottom:26px;
+}
+.detail-head{display:grid;gap:12px;margin-bottom:30px}
+.detail-head h2{font-size:clamp(28px,5vw,42px);line-height:1.08}
+.detail-head .lede{color:var(--ink-2);font-size:17px;max-width:62ch}
+.cols{display:grid;grid-template-columns:340px 1fr;gap:36px;align-items:start}
+.aside{position:sticky;top:16px;display:grid;gap:20px}
+.main-col{display:grid;gap:34px;min-width:0}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.panel > h3{font-size:16px;margin-bottom:4px}
+.panel .sub{font-size:12.5px;color:var(--ink-3);margin-bottom:12px}
+
+.shop-sec{margin-top:14px}
+.shop-sec:first-of-type{margin-top:6px}
+.shop-sec > .eyebrow{display:block;margin-bottom:7px}
+.shop-list{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.shop-item{display:flex;gap:10px;align-items:flex-start;padding:7px 6px;border-radius:6px;cursor:pointer}
+.shop-item:hover{background:var(--surface-2)}
+.shop-item input{margin:4px 0 0;width:16px;height:16px;accent-color:var(--accent);flex:none}
+.shop-item .txt{min-width:0}
+.shop-item .co{display:block;font-size:14.5px;line-height:1.35;font-weight:500}
+.shop-item .kolik{display:block;font-family:var(--mono);font-size:12px;color:var(--accent);font-variant-numeric:tabular-nums;margin-top:1px}
+.shop-item .pozn{font-size:12.5px;color:var(--ink-3);line-height:1.4}
+.shop-item.checked .co,.shop-item.checked .kolik,.shop-item.checked .pozn{text-decoration:line-through;color:var(--ink-3)}
+.mini-list{list-style:none;margin:0;padding:0;display:grid;gap:5px}
+.mini-list li{display:flex;justify-content:space-between;gap:12px;font-size:14px;padding:3px 0;border-bottom:1px dotted var(--line)}
+.mini-list li:last-child{border-bottom:none}
+.mini-list b{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--accent);white-space:nowrap;font-variant-numeric:tabular-nums}
+.equip{display:flex;flex-wrap:wrap;gap:6px}
+
+/* prep steps */
+.prep{list-style:none;margin:0;padding:0;counter-reset:p;display:grid;gap:9px}
+.prep li{counter-increment:p;display:flex;gap:12px;align-items:flex-start;font-size:15px}
+.prep li::before{
+  content:counter(p);font-family:var(--mono);font-size:11px;font-weight:500;
+  flex:none;width:21px;height:21px;border-radius:5px;display:grid;place-items:center;
+  background:var(--surface-2);color:var(--ink-2);margin-top:2px;
+}
+
+/* cook steps */
+.steps{display:grid;gap:0;border-left:2px solid var(--line);margin-left:9px}
+.step{position:relative;padding:0 0 26px 26px}
+.step:last-child{padding-bottom:0}
+.step::before{
+  content:"";position:absolute;left:-6px;top:8px;width:10px;height:10px;border-radius:50%;
+  background:var(--accent);border:2px solid var(--ground);
+}
+.step .t{
+  font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--warm);
+  font-variant-numeric:tabular-nums;display:block;margin-bottom:4px;
+}
+.step .body{font-size:16px;line-height:1.55}
+.check{
+  margin-top:9px;background:var(--accent-soft);border-radius:7px;padding:9px 12px;
+  font-size:14px;line-height:1.45;color:var(--ink);
+}
+.check b{
+  display:block;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--accent);font-weight:500;margin-bottom:3px;
+}
+
+.result{
+  background:var(--accent-soft);border-radius:var(--radius);padding:18px 20px;font-size:16px;line-height:1.55;
+}
+.leftovers{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.leftovers li{display:grid;grid-template-columns:minmax(140px,1fr) 2fr;gap:16px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.leftovers li:last-child{border-bottom:none}
+.leftovers .co{font-weight:500}
+.leftovers .kam{color:var(--ink-2)}
+.warn{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.warn li{
+  border-left:3px solid var(--danger);background:var(--danger-soft);
+  padding:10px 14px;border-radius:0 7px 7px 0;font-size:14.5px;line-height:1.45;
+}
+
+/* rating */
+.rate{display:grid;gap:12px}
+.rate .row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.star{font-size:23px;line-height:1;color:var(--line-2);padding:2px;transition:color .1s ease}
+.star.on{color:var(--warm)}
+.rate textarea{
+  font:inherit;font-size:14px;width:100%;min-height:70px;padding:10px 12px;border-radius:7px;
+  border:1px solid var(--line-2);background:var(--surface);color:var(--ink);resize:vertical;
+}
+.toggle{display:inline-flex;align-items:center;gap:8px;font-size:14.5px;cursor:pointer}
+.toggle input{width:17px;height:17px;accent-color:var(--accent)}
+
+.empty{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:34px;text-align:center;color:var(--ink-2);display:grid;gap:8px;
+}
+.empty h3{font-size:19px;color:var(--ink)}
+
+/* ---------- responsive ---------- */
+@media (max-width:860px){
+  .cols{grid-template-columns:1fr;gap:28px}
+  .aside{position:static}
+  .leftovers li{grid-template-columns:1fr;gap:2px}
+}
+@media (max-width:460px){
+  .shell{padding:0 16px;padding-block:0 48px}
+  .hero{padding:20px}
+  .panel{padding:15px}
+}
+
+/* ---------- print ---------- */
+@media print{
+  body{background:#fff;color:#000;font-size:11pt}
+  .noprint{display:none !important}
+  .shell{max-width:none;padding:0}
+  .cols{grid-template-columns:1fr;gap:16px}
+  .panel,.hero,.card{box-shadow:none;border:1px solid #bbb;break-inside:avoid}
+  .step{break-inside:avoid}
+  .check,.result{background:#f2f2f2}
+  .warn li{background:#f7f7f7;border-left:3px solid #666}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="masthead noprint">
+    <div class="brand">Úterní <em>kuchařka</em></div>
+    <div class="meta">Středomoří · 1 porce · do 30 minut</div>
+  </header>
+
+  <div id="view-list">
+    <div id="hero-slot"></div>
+    <div class="sec-head">
+      <h3>Kuchařka</h3>
+      <div class="rule"></div>
+      <span class="eyebrow" id="count"></span>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <div id="view-detail" hidden></div>
+</div>
+
+<script src="recepty.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var KEY = "kucharka-stav-v1";
+  var recepty = (window.RECEPTY || []).slice().sort(function(a,b){ return (b.poradi||0) - (a.poradi||0); });
+  var stavy = nacti();
+  var otevreny = null;
+
+  function nacti(){
+    try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e){ return {}; }
+  }
+  function zapis(){
+    try { localStorage.setItem(KEY, JSON.stringify(stavy)); } catch(e){}
+  }
+
+  var $ = function(id){ return document.getElementById(id); };
+  var esc = function(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+      return ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[c];
+    });
+  };
+
+  function denVTydnu(iso){
+    if(!iso) return "";
+    var d = new Date(iso + "T12:00:00");
+    if(isNaN(d)) return "";
+    var dny = ["neděle","pondělí","úterý","středa","čtvrtek","pátek","sobota"];
+    return dny[d.getDay()] + " " + d.getDate() + ". " + (d.getMonth()+1) + ".";
+  }
+
+  function stav(id){
+    var s = stavy[id];
+    return {
+      uvareno: !!(s && s.uvareno),
+      hodnoceni: (s && Number(s.hodnoceni)) || 0,
+      poznamka: (s && s.poznamka) || "",
+      skrtnuto: (s && Array.isArray(s.skrtnuto)) ? s.skrtnuto.slice() : []
+    };
+  }
+  function ulozStav(id, patch){
+    var s = stav(id);
+    for(var k in patch) s[k] = patch[k];
+    stavy[id] = s;
+    zapis();
+  }
+
+  function hvezdy(n){
+    var out = "";
+    for(var i=1;i<=5;i++) out += (i<=n ? "★" : "☆");
+    return out;
+  }
+  function pocetPolozek(r){
+    var n = 0;
+    (r.nakup || []).forEach(function(s){ n += (s.polozky || []).length; });
+    return n;
+  }
+
+  function renderList(){
+    var dnes = new Date().toISOString().slice(0,10);
+    var tenhle = null;
+    recepty.forEach(function(r){
+      if(r.datum && r.datum >= dnes){
+        if(!tenhle || r.datum < tenhle.datum) tenhle = r;
+      }
+    });
+    if(!tenhle && recepty.length) tenhle = recepty[0];
+
+    var hs = $("hero-slot");
+    if(!tenhle){
+      hs.innerHTML = "";
+    } else {
+      hs.innerHTML =
+        '<section class="hero">' +
+          '<div class="hero-top">' +
+            '<span class="eyebrow">' + (tenhle.datum ? "Na tento týden · " + esc(denVTydnu(tenhle.datum)) : "Naposledy přidané") + '</span>' +
+            '<span class="eyebrow">' + esc(tenhle.vlajka || "") + " " + esc(tenhle.kuchyne || "") + '</span>' +
+          '</div>' +
+          '<h2>' + esc(tenhle.nazev) + '</h2>' +
+          '<p class="lede">' + esc(tenhle.podnadpis || "") + '</p>' +
+          '<div class="chips">' +
+            '<span class="chip on">' + esc(tenhle.cas_min || "?") + ' minut</span>' +
+            '<span class="chip">' + esc(tenhle.porce || 1) + ' porce</span>' +
+            '<span class="chip">' + esc(tenhle.narocnost || "snadné") + '</span>' +
+            '<span class="chip warm">' + pocetPolozek(tenhle) + ' položek k nákupu</span>' +
+          '</div>' +
+          '<div class="hero-actions">' +
+            '<button class="btn primary" data-open="' + esc(tenhle.id) + '">Otevřít recept</button>' +
+          '</div>' +
+        '</section>';
+    }
+
+    var g = $("grid");
+    if(!recepty.length){
+      g.innerHTML = '<div class="empty"><h3>Zatím tu není žádný recept</h3><p>Přidej objekt do <code>recepty.js</code>.</p></div>';
+    } else {
+      g.innerHTML = recepty.map(function(r){
+        var s = stav(r.id);
+        return '<button class="card" data-open="' + esc(r.id) + '">' +
+          '<div class="row"><span class="flag">' + esc(r.vlajka || "🍽") + '</span>' +
+            '<span class="eyebrow">' + esc(r.kuchyne || "") + '</span></div>' +
+          '<h4>' + esc(r.nazev) + '</h4>' +
+          '<div class="chips"><span class="chip">' + esc(r.cas_min || "?") + ' min</span>' +
+            (r.datum ? '<span class="chip on">' + esc(denVTydnu(r.datum)) + '</span>' : "") + '</div>' +
+          '<div class="row">' +
+            '<span class="done">' + (s.uvareno ? "✓ uvařeno" : "") + '</span>' +
+            '<span class="stars">' + (s.hodnoceni ? hvezdy(s.hodnoceni) : "") + '</span>' +
+          '</div>' +
+        '</button>';
+      }).join("");
+    }
+    $("count").textContent = recepty.length + (recepty.length === 1 ? " recept" : (recepty.length < 5 ? " recepty" : " receptů"));
+  }
+
+  function renderDetail(r){
+    var s = stav(r.id);
+    var nakupHtml = (r.nakup || []).map(function(sek, si){
+      return '<div class="shop-sec"><span class="eyebrow">' + esc(sek.sekce) + '</span><ul class="shop-list">' +
+        (sek.polozky || []).map(function(p, pi){
+          var key = si + "-" + pi;
+          var on = s.skrtnuto.indexOf(key) > -1;
+          return '<li class="shop-item' + (on ? " checked" : "") + '" data-shop="' + key + '">' +
+            '<input type="checkbox" id="shop-' + esc(r.id) + '-' + key + '"' + (on ? " checked" : "") + '>' +
+            '<label class="txt" for="shop-' + esc(r.id) + '-' + key + '">' +
+              '<span class="co">' + esc(p.co) + '</span><span class="kolik">' + esc(p.kolik) + '</span>' +
+              (p.pozn ? '<div class="pozn">' + esc(p.pozn) + '</div>' : "") +
+            '</label></li>';
+        }).join("") + '</ul></div>';
+    }).join("");
+
+    $("view-detail").innerHTML =
+      '<div class="detail-bar noprint">' +
+        '<button class="btn ghost" id="back">← Zpět na kuchařku</button>' +
+        '<div class="chips" style="margin-left:auto">' +
+          '<span class="chip on">' + esc(r.vlajka || "") + " " + esc(r.kuchyne || "") + '</span>' +
+          '<span class="chip">' + esc(r.cas_min || "?") + ' minut</span>' +
+          '<span class="chip">' + esc(r.porce || 1) + ' porce</span>' +
+        '</div>' +
+        '<button class="btn" id="print">Vytisknout</button>' +
+      '</div>' +
+
+      '<div class="detail-head">' +
+        (r.datum ? '<span class="eyebrow">Naplánováno na ' + esc(denVTydnu(r.datum)) + '</span>' : '<span class="eyebrow">' + esc(r.kuchyne || "") + '</span>') +
+        '<h2>' + esc(r.nazev) + '</h2>' +
+        '<p class="lede">' + esc(r.podnadpis || "") + '</p>' +
+      '</div>' +
+
+      '<div class="cols">' +
+        '<div class="aside">' +
+          '<section class="panel">' +
+            '<h3>Nákupní seznam</h3>' +
+            '<p class="sub">Odškrtávej rovnou v obchodě. Ukládá se to v tomhle prohlížeči.</p>' +
+            nakupHtml +
+          '</section>' +
+          '<section class="panel">' +
+            '<h3>Ze spíže</h3>' +
+            '<p class="sub">Tohle doma nejspíš máš.</p>' +
+            '<ul class="mini-list">' + (r.spiz || []).map(function(p){
+              return '<li><span>' + esc(p.co) + '</span><b>' + esc(p.kolik) + '</b></li>';
+            }).join("") + '</ul>' +
+          '</section>' +
+          '<section class="panel">' +
+            '<h3>Co budeš potřebovat</h3>' +
+            '<div class="equip" style="margin-top:10px">' + (r.vybaveni || []).map(function(v){
+              return '<span class="chip">' + esc(v) + '</span>';
+            }).join("") + '</div>' +
+          '</section>' +
+        '</div>' +
+
+        '<div class="main-col">' +
+          '<section>' +
+            '<div class="sec-head"><h3>Než zapneš plotýnku</h3><div class="rule"></div></div>' +
+            '<ol class="prep">' + (r.priprava || []).map(function(p){
+              return '<li><span>' + esc(p) + '</span></li>';
+            }).join("") + '</ol>' +
+          '</section>' +
+
+          '<section>' +
+            '<div class="sec-head"><h3>Postup</h3><div class="rule"></div><span class="eyebrow">čas od začátku</span></div>' +
+            '<div class="steps">' + (r.postup || []).map(function(k){
+              return '<div class="step">' +
+                (k.cas ? '<span class="t">' + esc(k.cas) + '</span>' : "") +
+                '<div class="body">' + esc(k.text) + '</div>' +
+                (k.kontrola ? '<div class="check"><b>Poznáš to takhle</b>' + esc(k.kontrola) + '</div>' : "") +
+              '</div>';
+            }).join("") + '</div>' +
+          '</section>' +
+
+          (r.hotovo ? '<section>' +
+            '<div class="sec-head"><h3>Jak to má vypadat</h3><div class="rule"></div></div>' +
+            '<div class="result">' + esc(r.hotovo) + '</div>' +
+          '</section>' : "") +
+
+          ((r.zbytky || []).length ? '<section>' +
+            '<div class="sec-head"><h3>Co zbyde a co s tím</h3><div class="rule"></div></div>' +
+            '<ul class="leftovers">' + r.zbytky.map(function(z){
+              return '<li><span class="co">' + esc(z.co) + '</span><span class="kam">' + esc(z.kam) + '</span></li>';
+            }).join("") + '</ul>' +
+          '</section>' : "") +
+
+          ((r.pozor || []).length ? '<section>' +
+            '<div class="sec-head"><h3>Na co si dát pozor</h3><div class="rule"></div></div>' +
+            '<ul class="warn">' + r.pozor.map(function(p){
+              return '<li>' + esc(p) + '</li>';
+            }).join("") + '</ul>' +
+          '</section>' : "") +
+
+          '<section class="panel noprint rate">' +
+            '<h3>Jak to dopadlo</h3>' +
+            '<div class="row">' +
+              '<label class="toggle"><input type="checkbox" id="uvareno"' + (s.uvareno ? " checked" : "") + '> Uvařeno</label>' +
+              '<div id="stars">' + [1,2,3,4,5].map(function(i){
+                return '<button class="star' + (i <= s.hodnoceni ? " on" : "") + '" data-star="' + i + '" aria-label="' + i + ' z 5">' + (i <= s.hodnoceni ? "★" : "☆") + '</button>';
+              }).join("") + '</div>' +
+            '</div>' +
+            '<textarea id="poznamka" placeholder="Poznámka pro příště. Třeba: přidat víc česneku, omáčka byla řídká.">' + esc(s.poznamka) + '</textarea>' +
+          '</section>' +
+        '</div>' +
+      '</div>';
+
+    $("back").onclick = function(){ zavri(); };
+    $("print").onclick = function(){ window.print(); };
+
+    Array.prototype.forEach.call($("view-detail").querySelectorAll("[data-shop]"), function(li){
+      var cb = li.querySelector("input");
+      cb.onchange = function(){
+        var key = li.getAttribute("data-shop");
+        var cur = stav(r.id).skrtnuto;
+        var i = cur.indexOf(key);
+        if(cb.checked && i < 0) cur.push(key);
+        if(!cb.checked && i > -1) cur.splice(i,1);
+        li.classList.toggle("checked", cb.checked);
+        ulozStav(r.id, {skrtnuto: cur});
+      };
+    });
+
+    $("uvareno").onchange = function(){ ulozStav(r.id, {uvareno: this.checked}); };
+    Array.prototype.forEach.call($("view-detail").querySelectorAll("[data-star]"), function(b){
+      b.onclick = function(){
+        var n = Number(b.getAttribute("data-star"));
+        if(stav(r.id).hodnoceni === n) n = 0;
+        ulozStav(r.id, {hodnoceni: n});
+        Array.prototype.forEach.call($("view-detail").querySelectorAll("[data-star]"), function(x){
+          var on = Number(x.getAttribute("data-star")) <= n;
+          x.classList.toggle("on", on);
+          x.textContent = on ? "★" : "☆";
+        });
+      };
+    });
+    var pz = $("poznamka"), tmr;
+    pz.oninput = function(){ clearTimeout(tmr); tmr = setTimeout(function(){ ulozStav(r.id, {poznamka: pz.value}); }, 400); };
+  }
+
+  function otevri(id){
+    var r = null;
+    recepty.forEach(function(x){ if(x.id === id) r = x; });
+    if(!r) return;
+    otevreny = id;
+    renderDetail(r);
+    $("view-list").hidden = true;
+    $("view-detail").hidden = false;
+    window.scrollTo(0,0);
+    if(location.hash !== "#" + id) location.hash = id;
+  }
+  function zavri(){
+    otevreny = null;
+    $("view-detail").hidden = true;
+    $("view-list").hidden = false;
+    renderList();
+    if(location.hash) history.replaceState(null, "", location.pathname + location.search);
+    window.scrollTo(0,0);
+  }
+
+  document.addEventListener("click", function(e){
+    var t = e.target.closest ? e.target.closest("[data-open]") : null;
+    if(t) otevri(t.getAttribute("data-open"));
+  });
+  window.addEventListener("hashchange", function(){
+    var h = location.hash.slice(1);
+    if(h) otevri(h); else if(otevreny) zavri();
+  });
+
+  renderList();
+  var h0 = location.hash.slice(1);
+  if(h0) otevri(h0);
+})();
+</script>
+
+</body>
+</html>
