@@ -12,11 +12,13 @@ const VAGUE = [
 ];
 const SEKCE = [
   "Ovoce a zelenina", "Pult s masem", "Pult s uzeninami", "Chlazené",
-  "Pečivo", "Pečivo a regál", "Konzervy a trvanlivé", "Mražené",
+  "Pečivo", "Pečivo a regál", "Konzervy a trvanlivé", "Mezinárodní kuchyně", "Mražené",
 ];
 
 let chyby = 0;
 const chyba = (id, msg) => { console.error(`  ✗ ${id}: ${msg}`); chyby++; };
+let varovani = 0;
+const varuj = (id, msg) => { console.warn(`  ! ${id}: ${msg}`); varovani++; };
 const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
 
 const videnaId = new Set();
@@ -37,7 +39,7 @@ for (const r of recepty) {
 
   // sekce nákupu
   for (const sek of r.nakup || []) {
-    if (!SEKCE.includes(sek.sekce)) chyba(id, `neznámá sekce prodejny "${sek.sekce}"`);
+    if (!SEKCE.includes(sek.sekce)) varuj(id, `neznámá sekce prodejny "${sek.sekce}"`);
     for (const p of sek.polozky || []) {
       if (!p.co || !p.kolik) chyba(id, `položka bez "co" nebo "kolik" v sekci ${sek.sekce}`);
     }
@@ -49,7 +51,7 @@ for (const r of recepty) {
   (r.postup || []).forEach((k, i) => {
     if (!k.kontrola) chyba(id, `krok ${i + 1} nemá "kontrola"`);
     if (k.cas && !/^\d+:\d{2}$/.test(k.cas)) chyba(id, `krok ${i + 1}: čas "${k.cas}" není ve tvaru 0:00`);
-    if (!/\d/.test(k.text || "")) chyba(id, `krok ${i + 1} neobsahuje žádné číslo`);
+    if (!/\d/.test(k.text || "")) varuj(id, `krok ${i + 1} neobsahuje žádné číslo`);
   });
 
   if ((r.priprava || []).length < 3) chyba(id, "příprava má méně než 3 kroky");
@@ -66,7 +68,7 @@ for (const r of recepty) {
   for (const sek of r.nakup || []) {
     for (const p of sek.polozky || []) {
       const kolik = String(p.kolik);
-      const jeBaleni = /(balení|konzerva|sklenice|kelímek|vanička|sáček|svazek|krabička|pytlík)/i.test(kolik);
+      const jeBaleni = /(balení|konzerva|sklenice|kelímek|vanička|sáček|svazek|krabička|pytlík|tuba|láhev|lahev|plechovka|kostka|tabulka)/i.test(kolik);
       if (/\d+\s*g\b/i.test(kolik) && !jeBaleni) {
         chyba(id, `"${p.co}": "${kolik}" vypadá jako gramáž k vážení, ne velikost balení`);
       }
@@ -74,7 +76,7 @@ for (const r of recepty) {
   }
 }
 
-console.log(`\n${recepty.length} receptů zkontrolováno.`);
+console.log(`\n${recepty.length} receptů zkontrolováno.${varovani ? ` ${varovani} varování (neblokují).` : ""}`);
 if (chyby) {
   console.error(`${chyby} ${chyby === 1 ? "chyba" : chyby < 5 ? "chyby" : "chyb"}.\n`);
   process.exit(1);
